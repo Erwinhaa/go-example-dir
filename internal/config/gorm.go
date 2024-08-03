@@ -37,6 +37,7 @@ func NewDatabase(envConfig *model.Config, log *zerolog.Logger) *gorm.DB {
 	if err != nil {
 		log.Fatal().Msgf("failed to connect database: %v", err)
 	}
+
 }
 
 type zerologWriter struct {
