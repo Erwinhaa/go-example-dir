@@ -7,5 +7,7 @@ type Config struct {
 	DBPort     string `mapstructure:"DB_PORT"`
 	DBDatabase string `mapstructure:"DB_DATABASE"`
 
+	Port string `mapstructure:"PORT"`
+
 	LogMode string `mapstructure:"LOG_MODE"`
 }

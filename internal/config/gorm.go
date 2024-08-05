@@ -18,7 +18,7 @@ func NewDatabase(envConfig *model.Config, log *zerolog.Logger) *gorm.DB {
 	dbPort := envConfig.DBPort
 	database := envConfig.DBDatabase
 
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local", dbUser, dbPassword, dbHost, dbPort, database)
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", dbUser, dbPassword, dbHost, dbPort, database)
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
 		Logger: logger.New(&zerologWriter{Logger: log}, logger.Config{
@@ -33,11 +33,12 @@ func NewDatabase(envConfig *model.Config, log *zerolog.Logger) *gorm.DB {
 		log.Fatal().Msgf("failed to connect database: %v", err)
 	}
 
-	connection, err := db.DB()
+	_, err = db.DB()
 	if err != nil {
 		log.Fatal().Msgf("failed to connect database: %v", err)
 	}
 
+	return db
 }
 
 type zerologWriter struct {
