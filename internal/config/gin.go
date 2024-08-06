@@ -1,5 +1,8 @@
 package config
 
-func NewGin() {
+import "github.com/gin-gonic/gin"
 
+func NewGin() *gin.Engine {
+	router := gin.New()
+	return router
 }
