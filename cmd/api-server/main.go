@@ -16,7 +16,7 @@ func main() {
 		Config: envConfig,
 	})
 
-	route.UserRoutes()
+	route.UserRoutes(gin)
 
 	webPort := envConfig.Port
 	// err :=
