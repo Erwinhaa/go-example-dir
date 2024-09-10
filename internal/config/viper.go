@@ -13,7 +13,8 @@ func NewViper() *model.Config {
 
 	// config.SetConfigName("env")
 	viper.SetConfigType("env")
-	viper.AddConfigPath("./../")
+	viper.SetConfigFile(".env")
+	viper.AddConfigPath("./../../")
 	viper.AutomaticEnv()
 
 	err := viper.ReadInConfig()
@@ -21,7 +22,7 @@ func NewViper() *model.Config {
 		panic(fmt.Errorf("fatal error reading config file: %w", err))
 	}
 
-	err = viper.Unmarshal(config)
+	err = viper.Unmarshal(&config)
 	if err != nil {
 		panic(fmt.Errorf("fatal error unmarshal config file: %w", err))
 	}

@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 type (
@@ -19,7 +20,7 @@ type (
 	}
 )
 
-func NewController(uc usecase.UserUseCase) *userController {
+func NewUserController(uc usecase.UserUseCase) *userController {
 	return &userController{uc}
 }
 
@@ -48,7 +49,11 @@ func (c *userController) GetUser(ctx *gin.Context) {
 
 	user, err := c.uc.GetUserById(ctx, userId.ID)
 	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusInternalServerError, "Kontol")
+		if err == gorm.ErrRecordNotFound {
+			ctx.AbortWithStatusJSON(http.StatusNotFound, "Goblok")
+			return
+		}
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, "ANjing")
 		return
 	}
 

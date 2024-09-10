@@ -2,7 +2,6 @@ package main
 
 import (
 	"myapp/internal/config"
-	"myapp/internal/delivery/http/v1/route"
 )
 
 func main() {
@@ -13,11 +12,14 @@ func main() {
 
 	config.Bootstrap(&config.BootstrapConfig{
 		DB:     db,
+		Gin:    gin,
 		Config: envConfig,
 	})
 
-	route.UserRoutes(gin)
-
 	webPort := envConfig.Port
-	// err :=
+	log.Printf("App is running at port %s", webPort)
+	err := gin.Run(":" + webPort)
+	if err != nil {
+		log.Printf("Failed to start server: %v", err)
+	}
 }
