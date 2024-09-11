@@ -17,9 +17,9 @@ func main() {
 	})
 
 	webPort := envConfig.Port
-	log.Printf("App is running at port %s", webPort)
+	log.Info().Msgf("App is running at port %s", webPort)
 	err := gin.Run(":" + webPort)
 	if err != nil {
-		log.Printf("Failed to start server: %v", err)
+		log.Fatal().Msgf("Failed to start server: %v", err)
 	}
 }

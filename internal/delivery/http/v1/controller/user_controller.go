@@ -3,6 +3,7 @@ package controller
 import (
 	"myapp/internal/dto"
 	"myapp/internal/usecase"
+	"myapp/pkg/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -13,6 +14,7 @@ type (
 	UserController interface {
 		CreateNewUser(ctx *gin.Context)
 		GetUser(ctx *gin.Context)
+		GetUserList(ctx *gin.Context)
 	}
 
 	userController struct {
@@ -23,6 +25,8 @@ type (
 func NewUserController(uc usecase.UserUseCase) *userController {
 	return &userController{uc}
 }
+
+var _ UserController = (*userController)(nil)
 
 func (c *userController) CreateNewUser(ctx *gin.Context) {
 	var payload *dto.CreateUserRequest
@@ -50,6 +54,7 @@ func (c *userController) GetUser(ctx *gin.Context) {
 	user, err := c.uc.GetUserById(ctx, userId.ID)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
+			res := utils.NewFailedResponse()
 			ctx.AbortWithStatusJSON(http.StatusNotFound, "Goblok")
 			return
 		}
@@ -58,4 +63,8 @@ func (c *userController) GetUser(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, user)
+}
+
+func (c *userController) GetUserList(ctx *gin.Context) {
+
 }

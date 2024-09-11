@@ -23,7 +23,7 @@ func NewDatabase(envConfig *model.Config, log *zerolog.Logger) *gorm.DB {
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
 		Logger: logger.New(&zerologWriter{Logger: log}, logger.Config{
 			SlowThreshold:             time.Second * 5,
-			Colorful:                  true,
+			Colorful:                  false,
 			IgnoreRecordNotFoundError: true,
 			ParameterizedQueries:      true,
 			LogLevel:                  logger.LogLevel(log.GetLevel()),
