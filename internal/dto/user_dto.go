@@ -1,10 +1,10 @@
 package dto
 
 type CreateUserRequest struct {
-	FullName    string `json:"fullname"`
-	PhoneNumber string `json:"phone_number"`
-	Email       string `json:"email"`
-	Password    string `json:"password"`
+	FullName string `json:"fullname" binding:"required"`
+	// PhoneNumber string `json:"phone_number" binding:"required"`
+	// Email       string `json:"email" binding:"required"`
+	Password string `json:"password" binding:"required"`
 }
 
 type GetUserRequest struct {

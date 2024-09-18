@@ -9,4 +9,5 @@ import (
 func UserRoutes(r *gin.RouterGroup, c controller.UserController) {
 	r.POST("", c.CreateNewUser)
 	r.GET("/:id", c.GetUser)
+	r.GET("", c.GetUserList)
 }

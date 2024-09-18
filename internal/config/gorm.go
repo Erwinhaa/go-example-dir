@@ -5,13 +5,13 @@ import (
 	"myapp/internal/model"
 	"time"
 
-	"github.com/rs/zerolog"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
+	"gorm.io/gorm/schema"
 )
 
-func NewDatabase(envConfig *model.Config, log *zerolog.Logger) *gorm.DB {
+func NewDatabase(envConfig *model.Config, log *Logger) *gorm.DB {
 	dbUser := envConfig.DBUser
 	dbPassword := envConfig.DBPassword
 	dbHost := envConfig.DBHost
@@ -21,30 +21,32 @@ func NewDatabase(envConfig *model.Config, log *zerolog.Logger) *gorm.DB {
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", dbUser, dbPassword, dbHost, dbPort, database)
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
-		Logger: logger.New(&zerologWriter{Logger: log}, logger.Config{
+		NamingStrategy: schema.NamingStrategy{
+			SingularTable: true,
+		},
+		Logger: logger.New(log.standard, logger.Config{
 			SlowThreshold:             time.Second * 5,
-			Colorful:                  false,
+			Colorful:                  true,
 			IgnoreRecordNotFoundError: true,
-			ParameterizedQueries:      true,
-			LogLevel:                  logger.LogLevel(log.GetLevel()),
+			LogLevel:                  logger.LogLevel(logger.Info),
 		}),
 	})
 	if err != nil {
-		log.Fatal().Msgf("failed to connect database: %v", err)
+		log.Zlog().Fatal().Msgf("failed to connect database: %v", err)
 	}
 
 	_, err = db.DB()
 	if err != nil {
-		log.Fatal().Msgf("failed to connect database: %v", err)
+		log.Zlog().Fatal().Msgf("failed to connect database: %v", err)
 	}
 
 	return db
 }
 
-type zerologWriter struct {
-	Logger *zerolog.Logger
-}
+// type zerologWriter struct {
+// 	Logger *zerolog.Logger
+// }
 
-func (l *zerologWriter) Printf(message string, args ...interface{}) {
-	l.Logger.Printf(message, args...)
-}
+// func (l *zerologWriter) Printf(message string, args ...interface{}) {
+// 	l.Logger.Printf(message, args...)
+// }

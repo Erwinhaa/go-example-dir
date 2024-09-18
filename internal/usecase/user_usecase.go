@@ -11,6 +11,7 @@ import (
 type UserUseCase interface {
 	CreateUser(ctx context.Context, payload dto.CreateUserRequest) (user *entity.User, err error)
 	GetUserById(ctx context.Context, id int) (*entity.User, error)
+	GetUserList(ctx context.Context) ([]*entity.User, error)
 }
 
 type usecase struct {
@@ -20,6 +21,8 @@ type usecase struct {
 func NewUserUseCase(repo repository.UserRepository) UserUseCase {
 	return &usecase{repo}
 }
+
+var _ UserUseCase = (*usecase)(nil)
 
 func (uc *usecase) CreateUser(ctx context.Context, request dto.CreateUserRequest) (user *entity.User, err error) {
 	hashedPassword, err := utils.HashPassword(request.Password)
@@ -37,4 +40,8 @@ func (uc *usecase) CreateUser(ctx context.Context, request dto.CreateUserRequest
 
 func (uc *usecase) GetUserById(ctx context.Context, id int) (*entity.User, error) {
 	return uc.repo.GetUserById(ctx, id)
+}
+
+func (uc *usecase) GetUserList(ctx context.Context) ([]*entity.User, error) {
+	return uc.repo.GetUsers(ctx)
 }
