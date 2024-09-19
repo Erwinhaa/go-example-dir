@@ -31,7 +31,7 @@ func main() {
 	}
 
 	go func() {
-		log.Zlog().Info().Msgf("App is running at port %s", webPort)
+		log.Std().Printf("App is running at port %s", webPort)
 
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Zlog().Fatal().Err(err).Msgf("Failed to start server: %v", err)
